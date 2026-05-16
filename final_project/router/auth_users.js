@@ -6,7 +6,7 @@ const regd_users = express.Router();
 let users = [];
 
 const isValid = (username) => {
-     //returns boolean
+    //returns boolean
     let userswithsamename = users.filter((user) => {
         return user.username === username;
     });
@@ -36,12 +36,16 @@ regd_users.post("/login", (req, res) => {
     }
     if (authenticatedUser(username, password)) {
         let accessToken = jwt.sign({
-            data: password
+            data: username
         }, 'access', { expiresIn: 60 * 60 });
         req.session.authorization = {
-            accessToken, username
+            accessToken,
+            username
         };
-        return res.status(200).send("User successfully logged in");
+        return res.status(200).send(({
+            message: "User successfully logged in",
+            token: accessToken
+          }));
     } else {
         return res.status(208).json({ message: "Invalid Login. Check username and password" });
     }
@@ -53,7 +57,7 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
     const review = req.query.review;
     const username = req.session.username;
     // Check if books exist
-    if (!books[isbn]){
+    if (!books[isbn]) {
         return res.status(404).json({
             message: "Book not found"
         });
@@ -64,7 +68,7 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
         message: "Review added/updated successfully",
         reviews: books[isbn].reviews
     })
-   
+
 });
 
 module.exports.authenticated = regd_users;
