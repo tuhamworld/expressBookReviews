@@ -55,7 +55,15 @@ regd_users.post("/login", (req, res) => {
 regd_users.put("/auth/review/:isbn", (req, res) => {
     const isbn = req.params.isbn;
     const review = req.query.review;
-    const username = req.session.username;
+    const username = req.session.authorization?.username;
+
+    if (!username) {
+        return res.status(403).json({ message: "User not authenticated" });
+    }
+
+    if (!review) {
+        return res.status(400).json({ message: "Review is required" });
+    }
     // Check if books exist
     if (!books[isbn]) {
         return res.status(404).json({
