@@ -29,8 +29,6 @@ public_users.post("/register", (req, res) => {
 
 // Get the book list available in the shop
 public_users.get('/', function (req, res) {
-    //Write your code here
-    // return res.send(JSON.stringify(books, null, 4))
     Promise.resolve(books)
         .then((data)=>{
             return res.send(JSON.stringify(data, null, 4));
@@ -47,8 +45,17 @@ public_users.get('/', function (req, res) {
 public_users.get('/isbn/:isbn', function (req, res) {
     //Write your code here
     const isbn = req.params.isbn;
-    res.send(books[isbn]);
-    //   return res.status(300).json({message: "Yet to be implemented"});
+    Promise.resolve(books[isbn])
+        .then((data)=>{
+            return res.send(data);
+        })
+        .catch((err)=>{
+            return res.status(500).json({
+                message: "Error retrieving book details",
+                error: err.message
+            });
+        });
+
 });
 
 // Get book details based on author
