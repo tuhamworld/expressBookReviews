@@ -30,7 +30,17 @@ public_users.post("/register", (req, res) => {
 // Get the book list available in the shop
 public_users.get('/', function (req, res) {
     //Write your code here
-    return res.send(JSON.stringify(books, null, 4))
+    // return res.send(JSON.stringify(books, null, 4))
+    Promise.resolve(books)
+        .then((data)=>{
+            return res.send(JSON.stringify(data, null, 4));
+        })
+        .catch((err)=>{
+            return res.status(500).json({
+                message: "Error retrieving books",
+                error: err.message
+            });
+        });
 });
 
 // Get book details based on ISBN
