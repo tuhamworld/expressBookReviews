@@ -10,7 +10,13 @@ const isValid = (username) => {
     let userswithsamename = users.filter((user) => {
         return user.username === username;
     });
-    return userswithsamename.length > 0;
+    // Return true if any user with the same username is found, otherwise false
+
+    if (userswithsamename.length > 0) {
+        return true
+    } else {
+        return false
+    }
 };
 
 const authenticatedUser = (username, password) => {
